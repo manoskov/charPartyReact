@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import './App.css';
+import Clicker from './Clicker';
 
 const characters = [
   { name: 'Khaleed', picUrl: '/pics/01.jpg' },
@@ -15,6 +16,7 @@ export default function App() {
   const [userPic, setUserPic] = useState(3);
   const [userName, setUserName] = useState(characters[3].name);
   const [party, setParty] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -28,17 +30,21 @@ export default function App() {
       }
     }
   };
-
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     if (userName === '') {
       alert("Name can't be an empty line!");
-    }
-    else if (!party.includes(userName)) {
+    } else if (!party.includes(userName)) {
       setParty((prev) => [...prev, userName]);
     } else {
       alert("This character is already in your party!");
     }
+  };
+  
+
+const removeFromParty = (member) => {
+    setParty((prev) => prev.filter(item => item !== member));
   };
 
   return (
@@ -61,10 +67,15 @@ export default function App() {
         </form>
         <h2>{userName}</h2>
         <img src={characters[userPic].picUrl} alt="Your Character Picture" />
+
         {party.length > 0 ? (
-          <p id="party">Your party consists of {party.join(", ")}.</p>
+          <p id="partyTwo">Your party consists of {party.map (member => (<span onClick={() => removeFromParty(member)}  className="charInParty" id={member}>{member}</span>))}</p>
         ) : null}
+
+        <Clicker />
+          
       </main>
+    
     </div>
   );
-}
+};
